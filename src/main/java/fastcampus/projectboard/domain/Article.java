@@ -3,14 +3,8 @@ package fastcampus.projectboard.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -23,9 +17,8 @@ import java.util.Set;
         @Index(columnList = "createdAt"),
         @Index(columnList = "createdBy"),
 })
-@EntityListeners(AuditingEntityListener.class)
 @Entity
-public class Article {
+public class Article extends AuditingFields {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -48,20 +41,6 @@ public class Article {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     @ToString.Exclude
     private final Set<ArticleComment> articleComments = new LinkedHashSet<>();
-
-    // jpa가 자동생성. jpa config 클래스를 생성되어야 한다.
-    @CreatedDate
-    @Column(nullable = false)
-    private LocalDateTime createdAt;               // 생성일자
-    @CreatedBy
-    @Column(nullable = false, length = 100)
-    private String createdBy;          // 생성자
-    @LastModifiedDate
-    @Column(nullable = false)
-    private LocalDateTime modifiedAt;         // 수정일자
-    @LastModifiedBy
-    @Column(nullable = false, length = 100)
-    private String modifiedBy;    // 수정자
 
     /**
      * 하이버네이트 구현체의 경우 모든 엔티티는 기본 생성자를 가져야 한다.
@@ -100,4 +79,5 @@ public class Article {
     public int hashCode() {
         return Objects.hash(id);
     }
+
 }
