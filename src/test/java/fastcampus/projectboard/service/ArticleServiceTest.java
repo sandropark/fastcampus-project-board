@@ -32,6 +32,38 @@ class ArticleServiceTest {
     @InjectMocks private ArticleService sut;
     @Mock private ArticleRepository articleRepository;
 
+    @DisplayName("검색어 없이 게시글을 검색하면, 게시글 페이지를 반환한다. ")
+    @Test
+    void givenNothing_whenSearchingArticles_thenReturnsArticlePage() throws Exception {
+        // Given
+        Pageable pageable = Pageable.ofSize(20);
+        given(articleRepository.findAll(pageable)).willReturn(Page.empty());
+
+        // When
+        Page<ArticleDto> articles = sut.searchArticles(null, null, pageable);
+
+        // Then
+        assertThat(articles).isEmpty();
+        then(articleRepository).should().findAll(pageable);
+    }
+
+    @DisplayName("검색어로 게시글을 검색하면, 게시글 페이지를 반환한다.")
+    @Test
+    void givenSearchParameters_whenSearchingArticles_thenReturnsArticlePage () throws Exception {
+        // Given
+        SearchType searchType = SearchType.TITLE;
+        String searchKeyword = "title";
+        Pageable pageable = Pageable.ofSize(20);
+        given(articleRepository.findByTitleContaining(searchKeyword, pageable)).willReturn(Page.empty());
+
+        // When
+        Page<ArticleDto> articles = sut.searchArticles(searchType, searchKeyword, pageable);
+
+        // Then
+        assertThat(articles).isEmpty();
+        then(articleRepository).should().findByTitleContaining(searchKeyword, pageable);
+    }
+
     @DisplayName("게시글을 조회하면, 게시글을 반환한다.")
     @Test
     void givenArticleId_whenSearchingArticle_thenReturnsArticle() {
@@ -66,38 +98,6 @@ class ArticleServiceTest {
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("게시글이 없습니다 - articleId: " + articleId);
         then(articleRepository).should().findById(articleId);
-    }
-
-    @DisplayName("검색어로 게시글을 검색하면, 게시글 페이지를 반환한다.")
-    @Test
-    void givenSearchParameters_whenSearchingArticles_thenReturnsArticlePage () throws Exception {
-        // Given
-        SearchType searchType = SearchType.TITLE;
-        String searchKeyword = "title";
-        Pageable pageable = Pageable.ofSize(20);
-        given(articleRepository.findByTitle(searchKeyword, pageable)).willReturn(Page.empty());
-
-        // When
-        Page<ArticleDto> articles = sut.searchArticles(searchType, searchKeyword, pageable);
-
-        // Then
-        assertThat(articles).isEmpty();
-        then(articleRepository).should().findByTitle(searchKeyword, pageable);
-    }
-
-    @DisplayName("검색어 없이 게시글을 검색하면, 게시글 페이지를 반환한다. ")
-    @Test
-    void givenNothing_whenSearchingArticles_thenReturnsArticlePage() throws Exception {
-        // Given
-        Pageable pageable = Pageable.ofSize(20);
-        given(articleRepository.findAll(pageable)).willReturn(Page.empty());
-
-        // When
-        Page<ArticleDto> articles = sut.searchArticles(null, null, pageable);
-
-        // Then
-        assertThat(articles).isEmpty();
-        then(articleRepository).should().findAll(pageable);
     }
 
     @DisplayName("게시글 정보를 입력하면, 게시글을 생성한다.")
