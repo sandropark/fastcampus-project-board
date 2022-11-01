@@ -1,7 +1,6 @@
 package fastcampus.projectboard.service;
 
 import fastcampus.projectboard.dto.ArticleCommentDto;
-import fastcampus.projectboard.dto.ArticleCommentUpdateDto;
 import fastcampus.projectboard.repository.ArticleCommentRepository;
 import fastcampus.projectboard.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +22,14 @@ public class ArticleCommentService {
     }
 
     @Transactional
-    public void saveComment(ArticleCommentDto dto) {
+    public void saveArticleComment(ArticleCommentDto dto) {
     }
 
-    public void updateComment(Long commentId, ArticleCommentUpdateDto dto) {
-
+    @Transactional
+    public void updateArticleComment(ArticleCommentDto dto) {
     }
 
-    public void deleteComment(Long commentId) {
+    @Transactional
+    public void deleteArticleComment(Long articleCommentId) {
     }
 }
