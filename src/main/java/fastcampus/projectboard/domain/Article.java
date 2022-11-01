@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Getter
-@ToString
+@ToString(callSuper = true)     // 상속 받은 필드도 ToString 적용 (생성일, 생성자 등)
 @Table(indexes = {
         @Index(columnList = "title"),
         @Index(columnList = "hashtag"),
@@ -23,7 +23,8 @@ public class Article extends AuditingFields {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 내가 열고자하는 필드에 선택적으로 Setter를 걸 수 있다.
+    @Setter @ManyToOne(optional = false) private UserAccount userAccount;   // 유저 정보 (ID)
+
     @Setter
     @Column(nullable = false)
     private String title;                     // 제목, NotNull 필드로 지정
@@ -37,7 +38,7 @@ public class Article extends AuditingFields {
      * 댓글은 게시글에 종속되어 있기 때문에 cascade옵션으로 게시글이 삭제될 때 댓글을 함께 지울 수 있다.
      * 하지만 실무에서는 이렇게 하지 않을 수도 있다. 글이 지워져도 댓글은 백업해야 할 수도 있다. 따라서 옵션이다.
      */
-    @OrderBy("id")
+    @OrderBy("createdAt DESC")
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     @ToString.Exclude
     private final Set<ArticleComment> articleComments = new LinkedHashSet<>();
@@ -50,14 +51,15 @@ public class Article extends AuditingFields {
     protected Article() {
     }
 
-    private Article(String title, String content, String hashtag) {
+    public Article(UserAccount userAccount, String title, String content, String hashtag) {
+        this.userAccount = userAccount;
         this.title = title;
         this.content = content;
         this.hashtag = hashtag;
     }
 
-    public static Article of(String title, String content, String hashtag) {
-        return new Article(title, content, hashtag);
+    public static Article of(UserAccount userAccount, String title, String content, String hashtag) {
+        return new Article(userAccount, title, content, hashtag);
     }
 
     /**
