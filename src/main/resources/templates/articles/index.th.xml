@@ -60,6 +60,7 @@
       <attr sel="li[0]">
         <attr sel="a" th:href="@{/articles(
               page=*{number - 1},
+              sort=${param.sort},
               searchType=${param.searchType},
               searchValue=${param.searchValue}
               )}"
@@ -69,6 +70,7 @@
       <attr sel="li[1]" th:each="page : ${paginationBarNumbers}">
         <attr sel="a" th:text="${page + 1}" th:href="@{/articles(
               page=${page},
+              sort=${param.sort},
               searchType=${param.searchType},
               searchValue=${param.searchValue}
               )}"
@@ -78,6 +80,7 @@
       <attr sel="li[2]" th:class="page-item">
         <attr sel="a" th:href="@{/articles(
               page=*{number + 1},
+              sort=${param.sort},
               searchType=${param.searchType},
               searchValue=${param.searchValue}
               )}"
