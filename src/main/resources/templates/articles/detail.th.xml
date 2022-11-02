@@ -3,6 +3,7 @@
   <attr sel="#header" th:replace="header :: header" />
   <attr sel="#footer" th:replace="footer :: footer" />
 
+<!--  게시글 정보-->
   <attr sel="#article-main" th:object="${article}">
     <attr sel="#article-header/h1" th:text="*{title}"/>
     <attr sel="#nicknam" th:text="*{nickname}"/>
@@ -10,14 +11,21 @@
     <attr sel="#created-at" th:datetime="*{createdAt}" th:text="*{#temporals.format(createdAt, 'yyyy-MM-dd HH:mm:ss')}"/>
     <attr sel="#hashtag" th:text="*{hashtag}"/>
     <attr sel="#article-content/pre" th:text="*{content}"/>
-  </attr>
 
-  <attr sel="#article-comments" th:remove="all-but-first">
+    <!--  댓글-->
+    <attr sel="#article-comments" th:remove="all-but-first">
       <attr sel="li" th:each="comment : ${articleComments}">
         <attr sel="div/strong" th:text="${comment.nickname}"/>
         <attr sel="div/small/time" th:datetime="${comment.createdAt}" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}"/>
         <attr sel="div/p" th:text="${comment.content}"/>
       </attr>
+    </attr>
+
+    <!--  페이지네이션-->
+    <attr sel="#pagination">
+      <attr sel="ul/li[0]/a" th:href="*{id} - 1" th:classappend="*{id} == 1 ? 'disabled'"/>
+      <attr sel="ul/li[1]/a" th:href="*{id} + 1" th:classappend="*{id} == ${totalCount} ? 'disabled'"/>
+    </attr>
   </attr>
 
 </thlogic>

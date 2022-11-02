@@ -4,6 +4,7 @@ import fastcampus.projectboard.domain.type.SearchType;
 import fastcampus.projectboard.response.ArticleResponse;
 import fastcampus.projectboard.response.ArticleWithCommentsResponse;
 import fastcampus.projectboard.service.ArticleService;
+import fastcampus.projectboard.service.PaginationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @RequiredArgsConstructor
@@ -23,6 +26,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final PaginationService paginationService;
 
     @GetMapping
     public String articles(
@@ -32,15 +36,19 @@ public class ArticleController {
             ModelMap map) {
         Page<ArticleResponse> articles = articleService.searchArticles(searchType, searchValue, pageable)
                 .map(ArticleResponse::from);
+        List<Integer> paginationBarNumbers = paginationService.getPaginationBarNumbers(pageable.getPageNumber(), articles.getTotalPages());
         map.addAttribute("articles", articles);
+        map.addAttribute("paginationBarNumbers", paginationBarNumbers);
         return "articles/index";
     }
 
     @GetMapping("/{articleId}")
     public String article(@PathVariable Long articleId, ModelMap map) {
+        long totalCount = articleService.getArticleCount();
         ArticleWithCommentsResponse article = ArticleWithCommentsResponse.from(articleService.getArticle(articleId));
         map.addAttribute("article", article);
         map.addAttribute("articleComments", article.articleCommentsResponse());
+        map.addAttribute("totalCount", totalCount);
         return "articles/detail";
     }
 
