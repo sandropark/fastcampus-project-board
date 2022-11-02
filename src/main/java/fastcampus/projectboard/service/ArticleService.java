@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 
+import java.util.List;
+
 import static org.springframework.util.StringUtils.hasText;
 
 @Slf4j
@@ -72,5 +74,17 @@ public class ArticleService {
 
     public long getArticleCount() {
         return articleRepository.count();
+    }
+
+    public Page<ArticleDto> searchArticlesViaHashtag(String hashtag, Pageable pageable) {
+        if (hasText(hashtag)) {
+            return articleRepository.findByHashtag(hashtag, pageable)
+                    .map(ArticleDto::from);
+        }
+        return Page.empty(pageable);
+    }
+
+    public List<String> getHashtags() {
+        return articleRepository.findAllDistinctHashtag();
     }
 }
