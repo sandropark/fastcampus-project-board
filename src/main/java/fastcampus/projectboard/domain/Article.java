@@ -23,16 +23,10 @@ public class Article extends AuditingFields {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter @ManyToOne(optional = false) private UserAccount userAccount;   // 유저 정보 (ID)
-
-    @Setter
-    @Column(nullable = false)
-    private String title;                     // 제목, NotNull 필드로 지정
-    @Setter
-    @Column(nullable = false, length = 10000)
-    private String content;   // 본문, NotNull, 10000자 제한
-    @Setter
-    private String hashtag;                                             // 해시태그, Null
+    @Setter @ManyToOne(optional = false) @JoinColumn(name = "userId") private UserAccount userAccount;   // 유저 정보 (ID)
+    @Setter @Column(nullable = false) private String title;                     // 제목, NotNull 필드로 지정
+    @Setter @Column(nullable = false, length = 10000) private String content;   // 본문, NotNull, 10000자 제한
+    @Setter private String hashtag;                                             // 해시태그, Null
 
     /**
      * 댓글은 게시글에 종속되어 있기 때문에 cascade옵션으로 게시글이 삭제될 때 댓글을 함께 지울 수 있다.
