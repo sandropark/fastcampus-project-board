@@ -5,26 +5,43 @@
 
   <attr sel="main" th:object="${articles}">
 
+    <!--  검색타입-->
+    <attr sel="#search-type" th:remove="all-but-first">
+      <attr sel="option" th:each="searchType : ${searchTypes}"
+            th:value="${searchType.name}" th:text="${searchType.description}"
+            th:selected="${param.searchType != null && param.searchType.toString == searchType.name}"/>
+    </attr>
+    <!--  검색어-->
+    <attr sel="#search-value" th:value="${param.searchValue}"/>
+
     <!--  게시글-->
     <attr sel="#article-table">
       <!--  정렬-->
       <attr sel="thead/tr">
         <attr sel="th.title/a" th:href="@{/articles(
-            page=*{number},
-            sort=title + (*{sort.getOrderFor('title')} != null ? (*{sort.getOrderFor('title').direction.name} != 'DESC' ? ',desc' : '') : '')
-            )}"/>
+              page=*{number},
+              sort=title + (*{sort.getOrderFor('title')} != null ? (*{sort.getOrderFor('title').direction.name} != 'DESC' ? ',desc' : '') : ''),
+              searchType=${param.searchType},
+              searchValue=${param.searchValue}
+        )}"/>
         <attr sel="th.hashtag/a" th:href="@{/articles(
-            page=*{number},
-            sort=hashtag + (*{sort.getOrderFor('hashtag')} != null ? (*{sort.getOrderFor('hashtag').direction.name} != 'DESC' ? ',desc' : '') : '')
-            )}"/>
+              page=*{number},
+              sort=hashtag + (*{sort.getOrderFor('hashtag')} != null ? (*{sort.getOrderFor('hashtag').direction.name} != 'DESC' ? ',desc' : '') : ''),
+              searchType=${param.searchType},
+              searchValue=${param.searchValue}
+        )}"/>
         <attr sel="th.user-id/a" th:href="@{/articles(
-            page=*{number},
-            sort=userAccount.userId + (*{sort.getOrderFor('userAccount.userId')} != null ? (*{sort.getOrderFor('userAccount.userId').direction.name} != 'DESC' ? '' : ',asc') : '')
-            )}"/>
+              page=*{number},
+              sort=userAccount.userId + (*{sort.getOrderFor('userAccount.userId')} != null ? (*{sort.getOrderFor('userAccount.userId').direction.name} != 'DESC' ? '' : ',asc') : ''),
+              searchType=${param.searchType},
+              searchValue=${param.searchValue}
+        )}"/>
         <attr sel="th.created-at/a" th:href="@{/articles(
-            page=*{number},
-            sort=createdAt + (*{sort.getOrderFor('createdAt')} != null ? (*{sort.getOrderFor('createdAt').direction.name} != 'DESC' ? ',desc' : '') : '')
-            )}"/>
+              page=*{number},
+              sort=createdAt + (*{sort.getOrderFor('createdAt')} != null ? (*{sort.getOrderFor('createdAt').direction.name} != 'DESC' ? ',desc' : '') : ''),
+              searchType=${param.searchType},
+              searchValue=${param.searchValue}
+        )}"/>
       </attr>
       <!--    데이터 출력-->
       <attr sel="tbody" th:remove="all-but-first">
@@ -41,17 +58,32 @@
     <attr sel="ul.pagination">
       <!--    이전 버튼-->
       <attr sel="li[0]">
-        <attr sel="a" th:href="@{/articles(page=*{number - 1})}"
+        <attr sel="a" th:href="@{/articles(
+              page=*{number - 1},
+              sort=${param.sort},
+              searchType=${param.searchType},
+              searchValue=${param.searchValue}
+              )}"
               th:classappend="*{number} <= 0 ? disabled"/>
       </attr>
       <!--    페이지 버튼-->
       <attr sel="li[1]" th:each="page : ${paginationBarNumbers}">
-        <attr sel="a" th:text="${page + 1}" th:href="@{/articles(page=${page})}"
+        <attr sel="a" th:text="${page + 1}" th:href="@{/articles(
+              page=${page},
+              sort=${param.sort},
+              searchType=${param.searchType},
+              searchValue=${param.searchValue}
+              )}"
               th:classappend="${page} == *{number} ? disabled"/>
       </attr>
       <!--    다음 버튼-->
       <attr sel="li[2]" th:class="page-item">
-        <attr sel="a" th:href="@{/articles(page=*{number + 1})}"
+        <attr sel="a" th:href="@{/articles(
+              page=*{number + 1},
+              sort=${param.sort},
+              searchType=${param.searchType},
+              searchValue=${param.searchValue}
+              )}"
               th:classappend="*{number} >= *{totalPages - 1} ? disabled"/>
       </attr>
     </attr>
