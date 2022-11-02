@@ -14,8 +14,8 @@ public class PaginationService {
     private static final int BAR_LENGTH = 5;
 
     public List<Integer> getPaginationBarNumbers(int currentPage, int totalPages) {
-        int start = min(max(currentPage - (BAR_LENGTH / 2), 0), totalPages - BAR_LENGTH);
-        int end = start + BAR_LENGTH;
+        int start = max(currentPage - (BAR_LENGTH / 2), 0);
+        int end = min(start + BAR_LENGTH, totalPages);
         return IntStream.range(start, end).boxed().toList();
     }
 
