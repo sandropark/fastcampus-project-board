@@ -7,10 +7,13 @@ import fastcampus.projectboard.domain.QArticle;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
 import org.springframework.data.querydsl.binding.QuerydslBindings;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+
+import java.util.List;
 
 @RepositoryRestResource
 public interface ArticleRepository extends
@@ -23,6 +26,9 @@ public interface ArticleRepository extends
     Page<Article> findByUserAccount_UserIdContaining(String UserId, Pageable pageable);
     Page<Article> findByUserAccount_NicknameContaining(String nickname, Pageable pageable);
     Page<Article> findByHashtag(String hashtag, Pageable pageable);
+
+    @Query("select distinct a.hashtag from Article a where a.hashtag != null")
+    List<String> findAllDistinctHashtag();
 
     @Override
     default void customize(QuerydslBindings bindings, QArticle root) {
