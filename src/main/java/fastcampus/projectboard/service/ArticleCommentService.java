@@ -2,9 +2,11 @@ package fastcampus.projectboard.service;
 
 import fastcampus.projectboard.domain.Article;
 import fastcampus.projectboard.domain.ArticleComment;
+import fastcampus.projectboard.domain.UserAccount;
 import fastcampus.projectboard.dto.ArticleCommentDto;
 import fastcampus.projectboard.repository.ArticleCommentRepository;
 import fastcampus.projectboard.repository.ArticleRepository;
+import fastcampus.projectboard.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class ArticleCommentService {
 
     private final ArticleCommentRepository articleCommentRepository;
     private final ArticleRepository articleRepository;
+    private final UserAccountRepository userAccountRepository;
 
     public List<ArticleCommentDto> searchArticleComments(Long articleId) {
         return articleCommentRepository.findByArticle_Id(articleId)
@@ -33,10 +36,10 @@ public class ArticleCommentService {
     public void saveArticleComment(ArticleCommentDto dto) {
         try {
             Article article = articleRepository.getReferenceById(dto.articleId());
-            ArticleComment articleComment = dto.toEntity(article);
-            articleCommentRepository.save(articleComment);
+            UserAccount userAccount = userAccountRepository.getReferenceById(dto.userAccountDto().userId());
+            articleCommentRepository.save(dto.toEntity(article, userAccount));
         } catch (EntityNotFoundException e) {
-            log.warn("게시글을 찾을 수 없습니다 - articleId: {}", dto.articleId());
+            log.warn("댓글 저장 실패. 댓글 작성에 필요한 정보를 찾을 수 없습니다 - {}", e.getLocalizedMessage());
         }
     }
 

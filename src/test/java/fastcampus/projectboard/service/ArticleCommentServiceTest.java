@@ -7,6 +7,7 @@ import fastcampus.projectboard.dto.ArticleCommentDto;
 import fastcampus.projectboard.dto.UserAccountDto;
 import fastcampus.projectboard.repository.ArticleCommentRepository;
 import fastcampus.projectboard.repository.ArticleRepository;
+import fastcampus.projectboard.repository.UserAccountRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +29,8 @@ class ArticleCommentServiceTest {
     @InjectMocks private ArticleCommentService sut;
     @Mock private ArticleRepository articleRepository;
     @Mock private ArticleCommentRepository articleCommentRepository;
+    @Mock
+    private UserAccountRepository userAccountRepository;
 
     @DisplayName("게시글 ID로 조회하면, 해당 게시글에 포함된 댓글을 반환한다. ")
     @Test
@@ -53,12 +56,15 @@ class ArticleCommentServiceTest {
         // Given
         ArticleCommentDto dto = createArticleCommentDto("댓글");
         given(articleRepository.getReferenceById(dto.articleId())).willReturn(createArticle());
+        given(userAccountRepository.getReferenceById(dto.userAccountDto().userId())).willReturn(createUserAccount());
+        given(articleCommentRepository.save(any(ArticleComment.class))).willReturn(null);
 
         // When
         sut.saveArticleComment(dto);
 
         // Then
         then(articleRepository).should().getReferenceById(dto.articleId());
+        then(userAccountRepository).should().getReferenceById(dto.userAccountDto().userId());
         then(articleCommentRepository).should().save(any(ArticleComment.class));
     }
 
@@ -74,6 +80,7 @@ class ArticleCommentServiceTest {
 
         // Then
         then(articleRepository).should().getReferenceById(dto.articleId());
+        then(userAccountRepository).shouldHaveNoInteractions();
         then(articleCommentRepository).shouldHaveNoInteractions();
     }
 
