@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<thlogic>
+  <attr sel="#header" th:replace="header :: header"/>
+  <attr sel="#footer" th:replace="footer :: footer"/>
+
+  <attr sel="#article-form" th:object="${articleForm}" th:action>
+    <attr sel="#title" th:field="*{title}"/>
+    <attr sel="#content" th:field="*{content}"/>
+    <attr sel="#hashtag" th:field="*{hashtag}"/>
+
+    <attr sel="#cancel-button" th:onclick="|history.back()|"/>
+  </attr>
+</thlogic>
