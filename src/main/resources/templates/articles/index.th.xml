@@ -54,6 +54,9 @@
       </attr>
     </attr>
 
+    <!--  글쓰기 버튼-->
+    <attr sel="#write-article" th:href="@{/articles/form}"/>
+
     <!--  페이지네이션-->
     <attr sel="ul.pagination">
       <!--    이전 버튼-->

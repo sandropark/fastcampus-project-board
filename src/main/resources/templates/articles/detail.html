@@ -19,12 +19,13 @@
   </header>
 
   <main id="article-main" class="container">
+    <!--게시글 정보-->
     <header id="article-header" class="py-5 text-center">
       <h1>첫번째 글</h1>
     </header>
-
+    <!--사이드 섹션-->
     <div class="row g-5">
-      <section class="col-md-5 col-lg-4 order-md-last">
+      <section class="col-md-3 col-lg-4 order-md-last">
         <aside>
           <p><span id="nickname">Uno</span></p>
           <p><a id="email" href="mailto:djkehh@gmail.com">uno@mail.com</a></p>
@@ -32,28 +33,38 @@
           <p><span id="hashtag">#java</span></p>
         </aside>
       </section>
-
-      <article id="article-content" class="col-md-7 col-lg-8">
+      <!--본문-->
+      <article id="article-content" class="col-md-9 col-lg-8">
         <pre>본문</pre>
       </article>
     </div>
-
+    <!--수정/삭제 버튼-->
+    <div class="row g-5" id="article-buttons">
+      <form id="delete-article-form" method="post">
+        <div class="pb-5 d-grid gap-2 d-md-block">
+          <a class="btn btn-success me-md-2" role="button" id="update-article">수정</a>
+          <button class="btn btn-danger me-md-2" type="submit">삭제</button>
+        </div>
+      </form>
+    </div>
+    <!--댓글 정보-->
     <div class="row g-5">
       <section>
+        <!--댓글작성-->
         <form class="row g-3">
-          <div class="col-8">
+          <div class="col-md-9 col-lg-8">
             <label for="comment-textbox" hidden>댓글</label>
             <textarea class="form-control" id="comment-textbox" placeholder="댓글 쓰기.." rows="3"></textarea>
           </div>
-          <div class="col-auto">
+          <div class="col-md-3 col-lg-4">
             <label for="comment-submit" hidden>댓글 쓰기</label>
             <button class="btn btn-primary" id="comment-submit" type="submit">쓰기</button>
           </div>
         </form>
-
-        <ul id="article-comments" class="row col-7">
+        <!--댓글보기-->
+        <ul id="article-comments" class="row col-md-10 col-lg-8 pt-3">
           <li>
-            <div>
+            <div class="row">
               <strong>Uno</strong>
               <small><time>2022-01-01</time></small>
               <p>
@@ -63,8 +74,8 @@
             </div>
           </li>
           <li>
-            <div>
-              <strong>Uno</strong>
+            <div class="row">
+              <strong>Uno2</strong>
               <small><time>2022-01-01</time></small>
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>
@@ -73,10 +84,9 @@
             </div>
           </li>
         </ul>
-
       </section>
     </div>
-
+    <!--페이지네이션 (정렬과 상관없이 게시글id 증감)-->
     <div class="row g-5">
       <nav id="pagination" aria-label="Page navigation">
         <ul class="pagination">
