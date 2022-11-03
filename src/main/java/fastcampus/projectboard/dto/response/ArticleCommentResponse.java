@@ -1,4 +1,4 @@
-package fastcampus.projectboard.response;
+package fastcampus.projectboard.dto.response;
 
 import fastcampus.projectboard.dto.ArticleCommentDto;
 
@@ -13,7 +13,7 @@ public record ArticleCommentResponse(
         LocalDateTime createdAt,
         String email,
         String nickname
-) implements Serializable {
+) {
 
     public static ArticleCommentResponse of(Long id, String content, LocalDateTime createdAt, String email, String nickname) {
         return new ArticleCommentResponse(id, content, createdAt, email, nickname);
@@ -21,7 +21,7 @@ public record ArticleCommentResponse(
 
     public static ArticleCommentResponse from(ArticleCommentDto dto) {
         String nickname = dto.userAccountDto().nickname();
-        if (hasText(nickname)) {
+        if (!hasText(nickname)) {
             nickname = dto.userAccountDto().userId();
         }
 

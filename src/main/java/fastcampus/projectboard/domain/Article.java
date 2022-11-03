@@ -9,6 +9,8 @@ import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import static javax.persistence.FetchType.*;
+
 @Getter
 @ToString(callSuper = true)     // 상속 받은 필드도 ToString 적용 (생성일, 생성자 등)
 @Table(indexes = {
@@ -23,7 +25,7 @@ public class Article extends AuditingFields {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter @ManyToOne(optional = false) @JoinColumn(name = "userId") private UserAccount userAccount;   // 유저 정보 (ID)
+    @Setter @ManyToOne(optional = false, fetch = LAZY) @JoinColumn(name = "userId") private UserAccount userAccount;   // 유저 정보 (ID)
     @Setter @Column(nullable = false) private String title;                     // 제목, NotNull 필드로 지정
     @Setter @Column(nullable = false, length = 10000) private String content;   // 본문, NotNull, 10000자 제한
     @Setter private String hashtag;                                             // 해시태그, Null
