@@ -7,6 +7,8 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.util.Objects;
 
+import static javax.persistence.FetchType.LAZY;
+
 @Getter
 @ToString(callSuper = true)
 @Table(indexes = {
@@ -22,8 +24,8 @@ public class ArticleComment extends AuditingFields {
     private Long id;
 
     // 해당 댓글이 소속된 게시글
-    @Setter @ManyToOne(optional = false) private Article article;
-    @Setter @ManyToOne(optional = false) @JoinColumn(name = "userId") private UserAccount userAccount; // 유저 정보 (ID)
+    @Setter @ManyToOne(optional = false, fetch = LAZY) private Article article;
+    @Setter @ManyToOne(optional = false, fetch = LAZY) @JoinColumn(name = "userId") private UserAccount userAccount; // 유저 정보 (ID)
 
     @Setter @Column(nullable = false, length = 500) private String content;
 
