@@ -17,15 +17,22 @@
         <attr sel="#update-article" th:href="@{|/articles/*{id}/form|}"/>
       </attr>
     </attr>
-    <!--  댓글-->
+    <!--댓글작성-->
+    <attr sel=".article-id" th:name="'articleId'" th:value="*{id}"/>
+    <attr sel="#comment-form" th:action="@{/comments/new}">
+      <attr sel="#comment-textbox" th:name="'content'"/>
+    </attr>
+    <!--  댓글 보기-->
     <attr sel="#article-comments" th:remove="all-but-first">
       <attr sel="li" th:each="comment : ${articleComments}">
-        <attr sel="div/strong" th:text="${comment.nickname}"/>
-        <attr sel="div/small/time" th:datetime="${comment.createdAt}" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}"/>
-        <attr sel="div/p" th:text="${comment.content}"/>
+        <!--댓글삭제버튼-->
+        <attr sel="form.comment-delete-form" th:action="|/comments/${comment.id}/delete|">
+          <attr sel="div/strong" th:text="${comment.nickname}"/>
+          <attr sel="div/small/time" th:datetime="${comment.createdAt}" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}"/>
+          <attr sel="div/p" th:text="${comment.content}"/>
+        </attr>
       </attr>
     </attr>
-
     <!--  페이지네이션-->
     <attr sel="#pagination">
       <attr sel="ul/li[0]/a" th:href="*{id} - 1" th:classappend="*{id} == 1 ? 'disabled'"/>
